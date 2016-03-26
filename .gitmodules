@@ -1,0 +1,3 @@
+[submodule "src/cgenerator"]
+	path = src/cgenerator
+	url = git@github.com:MrLYC/cgenerator.git

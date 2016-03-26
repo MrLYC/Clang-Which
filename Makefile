@@ -1,5 +1,6 @@
 SOURCES=$(wildcard src/*.c)
-OBJECTS=$(patsubst %.c, objs/%.o, $(SOURCES))
+REQUIREMENTS=$(patsubst %.h, %.c, $(wildcard src/*/src/*.h))
+OBJECTS=$(patsubst %.c, objs/%.o, $(SOURCES) $(REQUIREMENTS))
 TARGET=objs/which
 
 CC=gcc -c -g -O2 -Wall -Wextra -I=src
@@ -8,7 +9,7 @@ LINK=gcc -o
 $(TARGET): build compile link
 
 build:
-	mkdir -p objs/src/
+	mkdir -p $(dir $(OBJECTS))
 
 compile: $(OBJECTS)
 
@@ -18,4 +19,7 @@ objs/src/%.o: src/%.c
 link:
 	$(LINK) $(TARGET) $(OBJECTS)
 
-.PHONY: build compile link
+clean:
+	rm -rf objs/
+
+.PHONY: build compile link clean
