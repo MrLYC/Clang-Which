@@ -3,12 +3,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include "command.h"
 
 const int SUCCESSNO = 0;
 const int SYSERRNO = -1;
 const int USRERRNO = 1;
 const int OPTFINISHED = -1;
-
 
 typedef struct {
     bool option_all;
@@ -74,7 +74,18 @@ int main(int argc, char * const argv[]) {
         return SUCCESSNO;
     }
 
-    // TODO: find the command
+    Command command;
+    command.name = arg.filename;
+    command.find_all = arg.option_all;
+
+    char * command_path = NULL;
+    Gen_Init(command.state);
+    while (!(command.state.finished)) {
+        command_path = gen_find(&command);
+        if (!(command.state.finished)) {
+            printf("%s\n", command_path);
+        }
+    }
 
     return SUCCESSNO;
 }
