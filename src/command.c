@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "command.h"
 
 
@@ -39,16 +40,17 @@ char * get_command_path(char path[], int path_len, char command[]) {
     }
     full_path[path_len] = '\0';
 
-    memcpy(full_path + path_len, command, command_len + 1);
+    strcat(full_path, command);
     return full_path;
 }
 
 
-bool is_executable(char path[]) {
-    // TODO: check is executable
-    FILE *fp;
-    if ((fp = fopen(path, "r"))) {
-        fclose(fp);
+bool is_executable(const char path[]) {
+    struct stat file_stat;
+    if (!stat(path, &file_stat)) {
+        return false;
+    }
+    if (file_stat.st_mode & S_IXUSR) {
         return true;
     }
     return false;
